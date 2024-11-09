@@ -39,6 +39,7 @@ class Shipping(TimestampedModel):
     
 
     user_id = models.CharField(max_length=50,unique=False)
+    username = models.CharField(max_length=50,blank=True,null=True)
     whatsapp = models.CharField(max_length=20,blank=True,null=True)
     sms = models.CharField(max_length=20,blank=True,null=True)
     email = models.EmailField(blank=True,null=True)

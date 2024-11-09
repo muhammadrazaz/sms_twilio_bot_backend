@@ -45,7 +45,7 @@ class BotLeadSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Lead
-        fields = ['id','user_id','whatsapp','sms','email','discord','instagram','snapchat','user_states','status']
+        fields = ['id','user_id','username','whatsapp','sms','email','discord','instagram','snapchat','user_states','status']
         # fields = '__all__'
         
 
