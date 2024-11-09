@@ -163,3 +163,11 @@ EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.environ.get('EMAIL_PORT')
+
+CORS_ALLOWED_ORIGINS = [
+    
+    "http://167.172.151.37:3001",
+    "http://localhost:3000"
+]
+
+CORS_ALLOW_CREDENTIALS = True

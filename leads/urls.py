@@ -1,4 +1,4 @@
-from .views import BotLeadViewSet,LeadViewSet,BotShippingViewSet,ShippingViewSet,ShippingFilterOptionsApiView,LeadFilterOptionsApiView,DashboardApiView
+from .views import BotLeadViewSet,LeadViewSet,BotShippingViewSet,ShippingViewSet,ShippingFilterOptionsApiView,LeadFilterOptionsApiView,DashboardApiView,BotStateViewSet
 from rest_framework.routers import DefaultRouter
 from django.urls import path,include
 
@@ -9,6 +9,8 @@ routes.register(r'shippings',ShippingViewSet,basename='shippings')
 bot_routes = DefaultRouter()
 bot_routes.register(r'leads',BotLeadViewSet,basename='bot-leads')
 bot_routes.register(r'shippings',BotShippingViewSet,basename='bot-shippings')
+bot_routes.register(r'states',BotStateViewSet)
+
 
 urlpatterns = [
     path('',include(routes.urls)),

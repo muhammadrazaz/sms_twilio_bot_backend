@@ -10,14 +10,14 @@ class Lead(TimestampedModel):
 )
     
 
-    user_id = models.CharField(max_length=50,unique=True)
+    user_id = models.CharField(max_length=50,unique=False)
     username = models.CharField(max_length=50,blank=True,null=True)
     whatsapp = models.CharField(max_length=20,blank=True,null=True)
     sms = models.CharField(max_length=20,blank=True,null=True)
     email = models.EmailField(blank=True,null=True)
-    discord = models.CharField(max_length=30,blank=True,null=True)
-    instagram = models.CharField(max_length=30,blank=True,null=True)
-    snapchat = models.CharField(max_length=30,blank=True,null=True)
+    discord = models.CharField(max_length=80,blank=True,null=True)
+    instagram = models.CharField(max_length=80,blank=True,null=True)
+    snapchat = models.CharField(max_length=80,blank=True,null=True)
     status = models.CharField(max_length=20,choices=status_choices,default='in_progress')
     states = models.ManyToManyField(State)
     notes = models.CharField(max_length=500,blank=True,null=True)
@@ -38,13 +38,13 @@ class Shipping(TimestampedModel):
 )
     
 
-    user_id = models.CharField(max_length=50,unique=True)
+    user_id = models.CharField(max_length=50,unique=False)
     whatsapp = models.CharField(max_length=20,blank=True,null=True)
     sms = models.CharField(max_length=20,blank=True,null=True)
     email = models.EmailField(blank=True,null=True)
-    discord = models.CharField(max_length=30,blank=True,null=True)
-    instagram = models.CharField(max_length=30,blank=True,null=True)
-    snapchat = models.CharField(max_length=30,blank=True,null=True)
+    discord = models.CharField(max_length=80,blank=True,null=True)
+    instagram = models.CharField(max_length=80,blank=True,null=True)
+    snapchat = models.CharField(max_length=80,blank=True,null=True)
     status = models.CharField(max_length=20,choices=status_choices,default='in_progress')
     notes = models.CharField(max_length=500,blank=True,null=True)
 

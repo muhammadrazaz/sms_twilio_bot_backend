@@ -1,4 +1,4 @@
-from .serializers import BotLeadSerializer,LeadSerializer,BotShippingSerializer,ShippingSerializer
+from .serializers import BotLeadSerializer,LeadSerializer,BotShippingSerializer,ShippingSerializer,BotStateSerializer
 from django.db.models import Case, When, Value, CharField,F,Count
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from django.db.models.functions import Concat,ExtractMonth
@@ -82,6 +82,15 @@ class DashboardApiView(APIView):
                 .annotate(count=Count('id'))
                 .values_list('month','count')
             )
+        
+        shipping_counts = dict(
+                Shipping.objects
+                .filter()
+                .annotate(month=ExtractMonth('created_at'))  # Assuming you have a created_at field
+                .values('month')
+                .annotate(count=Count('id'))
+                .values_list('month','count')
+            )
         lead_counts_by_month = {
             'label':[],
             'data' :[]
@@ -89,7 +98,7 @@ class DashboardApiView(APIView):
         
         for i in range(0,len(months)):
             lead_counts_by_month['label'].append(months[i])
-            lead_counts_by_month['data'].append(lead_counts.get(i+1,0) )
+            lead_counts_by_month['data'].append(lead_counts.get(i+1,0) + shipping_counts.get(i+1,0) )
 
       
         lead_counts_by_status = dict(
@@ -100,13 +109,20 @@ class DashboardApiView(APIView):
             .values_list('status','count')
         )
 
+        shipping_counts_by_status = dict(
+            Shipping.objects
+            .filter()
+            .values('status')  
+            .annotate(count=Count('id'))
+            .values_list('status','count')
+        )
         lead_by_status = {
             'label':[],
             'data': []
         }
         for lead_status in Lead.get_status_choices():
             lead_by_status['label'].append(lead_status)
-            lead_by_status['data'].append(lead_counts_by_status.get(lead_status.replace(' ','_').lower(),0))
+            lead_by_status['data'].append(lead_counts_by_status.get(lead_status.replace(' ','_').lower(),0) + shipping_counts_by_status.get(lead_status.replace(' ','_').lower(),0))
 
         task_counts_by_status = dict(
             Task.objects
@@ -236,9 +252,15 @@ class BotLeadViewSet(viewsets.ModelViewSet):
     
 class BotShippingViewSet(viewsets.ModelViewSet):
     serializer_class = BotShippingSerializer
-    permission_classes = [AllowAny]
+    authentication_classes = [TokenAuthentication]
     queryset = Shipping.objects.all()
 
+
+class BotStateViewSet(viewsets.ModelViewSet):
+    serializer_class = BotStateSerializer
+    authentication_classes = [TokenAuthentication]
+    queryset = State.objects.all()
+    
     
 
 

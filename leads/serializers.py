@@ -11,6 +11,7 @@ class LeadSerializer(serializers.ModelSerializer):
 
 
     def validate(self, attrs):
+        
         super().validate(attrs)
 
         state_names = attrs.get('state_names')
@@ -24,6 +25,7 @@ class LeadSerializer(serializers.ModelSerializer):
         return attrs
     
     def create(self, validated_data):
+        
         states = validated_data.pop('states')
         states = State.objects.filter(state_name__in = states)
         lead = Lead.objects.create(**validated_data)
@@ -43,7 +45,7 @@ class BotLeadSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Lead
-        fields = ['id','user_id','whatsapp','sms','email','discord','instagram','snapchat','user_states']
+        fields = ['id','user_id','whatsapp','sms','email','discord','instagram','snapchat','user_states','status']
         # fields = '__all__'
         
 
@@ -54,7 +56,9 @@ class BotLeadSerializer(serializers.ModelSerializer):
         user_states = user_states.split(',')
 
         if not isinstance(user_states, list):
-            user_states = [user_states]
+            user_states = [user_states.stripe()]
+        else:
+            user_states = [state.strip() for state in user_states]
 
        
 
@@ -62,15 +66,20 @@ class BotLeadSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'user_states': 'All provided states must be valid.'})
         
         attrs['states'] = user_states
-        
+        attrs.pop('user_states')
         return attrs
     
 
     def create(self, validated_data):
         states = validated_data.pop('states')
         states = State.objects.filter(state_name__in = states)
+        
         lead = Lead.objects.create(**validated_data)
         lead.states.set(states)
+
+        states = State.objects.filter(lead = lead.id).values_list('state_name',flat=True)
+
+        lead.user_states = ','.join(states)
         
 
         return lead
@@ -79,4 +88,10 @@ class BotLeadSerializer(serializers.ModelSerializer):
 class BotShippingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shipping
+        fields = '__all__'
+
+
+class BotStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = State
         fields = '__all__'

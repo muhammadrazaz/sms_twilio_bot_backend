@@ -12,6 +12,9 @@ djangorestframework = "*"
 django-cors-headers = "*"
 pytz = "*"
 djangorestframework-simplejwt = "*"
+pandas = "*"
+requests = "*"
+openpyxl = "*"
 
 [dev-packages]
 

@@ -77,6 +77,9 @@ class AgentSerializer(serializers.ModelSerializer):
 
         agent.states.set(states)
 
+        agent.username = user.username
+        agent.email = user.email
+
         return agent
     
     def update(self, instance, validated_data):
@@ -94,6 +97,7 @@ class AgentSerializer(serializers.ModelSerializer):
         instance.states.remove(*removed_states)
 
         instance.states.set(states)
+        
 
         return instance
         

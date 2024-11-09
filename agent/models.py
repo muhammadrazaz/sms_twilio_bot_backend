@@ -12,7 +12,7 @@ uan_regex = RegexValidator(
 class AgentProfile(TimestampedModel):
     
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-    channel_id  = models.CharField(max_length=100,unique=True)
+    channel_id  = models.CharField(max_length=100,unique=False)
     telegram_username = models.CharField(max_length=50,blank=True,null=True)
     uan = models.CharField(max_length=12,blank=True,null=True,validators=[uan_regex])
     states = models.ManyToManyField(State)
