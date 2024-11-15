@@ -112,8 +112,8 @@ if __name__ == "__main__":
     in_town_df = pd.read_excel("Telegram_redirect.xlsx",sheet_name="Location")
     add_in_town(base_url=base_url,headers=headers,data=in_town_df)
 
-    # shipping_df = pd.read_excel("Telegram_redirect.xlsx",sheet_name="Shipping")
-    # add_shipping(base_url=base_url,headers=headers,data=shipping_df)
+    shipping_df = pd.read_excel("Telegram_redirect.xlsx",sheet_name="Shipping")
+    add_shipping(base_url=base_url,headers=headers,data=shipping_df)
 
 
     # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjE5NjI1LCJpYXQiOjE3MzExMzk2MjUsImp0aSI6IjAzMDUxM2EwN2U4ZTQ2MThiMWI1ZDE5ZjU0YWVjYzUzIiwidXNlcl9pZCI6MX0.hiVsanP63lGbh9jDLOGC3x3gObH4zybi9lFmDtPSlC0'
