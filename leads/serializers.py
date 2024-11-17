@@ -3,7 +3,7 @@ from auth_app.models import State
 from .models import Lead,Shipping
 
 class LeadSerializer(serializers.ModelSerializer):
-    state_names = serializers.ListField(child=serializers.CharField(),write_only = True)
+    state_names = serializers.ListField(child=serializers.CharField())
     states = serializers.CharField(read_only=True)
     class Meta:
         model = Lead
@@ -25,13 +25,13 @@ class LeadSerializer(serializers.ModelSerializer):
         return attrs
     
     def create(self, validated_data):
-        print('pppppppppppppppppppppppppppppppp1')
+  
         states = validated_data.pop('states')
-        print('pppppppppppppppppppppppppppppppp2')
+     
         states = State.objects.filter(state_name__in = states)
         lead = Lead.objects.create(**validated_data)
         lead.states.set(states)
-        print('pppppppppppppppppppppppppppppppp3')
+        
 
         return lead
 
