@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from auth_app.models import State
+from auth_app.models import State,Notification,User
 from .models import Lead,Shipping
+
 
 class LeadSerializer(serializers.ModelSerializer):
     state_names = serializers.ListField(child=serializers.CharField())
@@ -11,7 +12,7 @@ class LeadSerializer(serializers.ModelSerializer):
 
 
     def validate(self, attrs):
-        
+ 
         super().validate(attrs)
 
         state_names = attrs.pop('state_names')
@@ -20,20 +21,59 @@ class LeadSerializer(serializers.ModelSerializer):
         if State.objects.filter(state_name__in=state_names).count() != len(set(state_names)):
             raise serializers.ValidationError({'state_names': 'All provided states must be valid.'})
         
-        attrs['states'] = State.objects.filter(state_name__in=state_names)
-        
+        # attrs['states'] = State.objects.filter(state_name__in=state_names)
+        attrs['states'] = state_names
         return attrs
     
     def create(self, validated_data):
-  
-        states = validated_data.pop('states')
-     
-        states = State.objects.filter(state_name__in = states)
+    
+        lead_states = validated_data.pop('states')
+      
+        states = State.objects.filter(state_name__in = lead_states)
         lead = Lead.objects.create(**validated_data)
+       
         lead.states.set(states)
+        print('===================  ')
+        lead.save()
         
-
+        lead.state_names = lead_states
         return lead
+    
+    def update(self, instance, validated_data):
+       
+        lead_states = validated_data.pop('states', None)
+
+       
+        instance = super().update(instance=instance,validated_data=validated_data)
+
+        if lead_states is not None:
+            
+            current_states = instance.states.all()
+
+           
+            new_states = State.objects.filter(state_name__in=lead_states)
+
+            
+            states_to_add = new_states.exclude(id__in=[state.id for state in current_states])
+
+           
+            states_to_remove = current_states.exclude(state_name__in=lead_states)
+
+            
+
+           
+            if states_to_add.exists():
+                instance.states.add(*states_to_add)
+
+           
+            if states_to_remove.exists():
+                instance.states.remove(*states_to_remove)
+
+        
+        instance.state_names = lead_states
+        instance.save()
+
+        return instance
 
 class ShippingSerializer(serializers.ModelSerializer):
     class Meta:

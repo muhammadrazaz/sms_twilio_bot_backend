@@ -177,7 +177,7 @@ class LeadViewSet(viewsets.ModelViewSet):
             filter_conditions['states__state_name__in'] = user_states
 
 
-        queryset = Lead.objects.filter(**filter_conditions)
+        queryset = Lead.objects.filter(**filter_conditions).order_by('-created_at')
         queryset_with_states = []
         for query in queryset:
             states = State.objects.filter(lead = query.id).values_list('state_name',flat=True)
@@ -215,7 +215,7 @@ class ShippingViewSet(viewsets.ModelViewSet):
 
         
         
-        queryset = Shipping.objects.filter(**filter_conditions)
+        queryset = Shipping.objects.filter(**filter_conditions).order_by('-created_at')
         return queryset
 
 

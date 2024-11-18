@@ -7,3 +7,4 @@ class TaskConfig(AppConfig):
 
     def ready(self):
         import task.signals # Import signals to ensure they are registered
+        import leads.signals
